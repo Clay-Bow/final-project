@@ -1,123 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NBA Roster Quiz</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #111;
-      color: #fff;
-      text-align: center;
-      padding: 30px;
-    }
-
-    #game {
-      background-color: #1e1e1e;
+      background: #0b1120;
+      color: #f0f4f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 20px;
-      border-radius: 10px;
-      display: inline-block;
-      width: 350px;
     }
-
-    input, button {
+    h1 {
+      color: #ffcc00;
+    }
+    #teamName {
+      font-size: 1.3em;
+      margin: 20px 0;
+    }
+    input {
       padding: 8px;
-      margin: 8px;
+      border-radius: 5px;
       border: none;
-      border-radius: 6px;
+      width: 220px;
     }
-
     button {
-      background-color: #2563eb;
-      color: white;
+      padding: 8px 12px;
+      margin-left: 5px;
+      background: #ffcc00;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
       cursor: pointer;
     }
-
-    button:hover {
-      background-color: #1d4ed8;
+    #guessedPlayers {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      max-width: 600px;
     }
-
-    .player {
-      display: inline-block;
-      background-color: #16a34a;
-      padding: 4px 10px;
-      margin: 4px;
-      border-radius: 6px;
+    .chip {
+      background: #1e293b;
+      padding: 6px 10px;
+      border-radius: 12px;
     }
   </style>
 </head>
 <body>
   <h1>NBA Roster Quiz</h1>
-  <div id="game">
-    <div id="team-name">Press Start</div>
-    <button id="startBtn">Start Game</button><br>
-    <input id="guessInput" type="text" placeholder="Enter player name..." disabled><br>
-    <div id="score">Score: 0</div>
-    <div id="players"></div>
+  <p>Guess as many players as you can from the current team!</p>
+
+  <button id="startBtn">Start Game</button>
+  <h2 id="teamName"></h2>
+
+  <div id="inputArea" style="display:none;">
+    <input type="text" id="guessInput" placeholder="Enter player name..." />
+    <button id="guessBtn">Guess</button>
   </div>
 
-  <script>
-    const teamNameDiv = document.getElementById("team-name");
-    const startBtn = document.getElementById("startBtn");
-    const guessInput = document.getElementById("guessInput");
-    const playersDiv = document.getElementById("players");
-    const scoreDiv = document.getElementById("score");
+  <div id="score">Score: 0</div>
+  <div id="guessedPlayers"></div>
 
+  <script>
+    let teams = {};
     let currentTeam = "";
     let roster = [];
     let guessed = [];
     let score = 0;
 
-    startBtn.addEventListener("click", startGame);
-
-    async function startGame() {
-      teamNameDiv.textContent = "Loading team...";
-      startBtn.disabled = true;
-      guessInput.disabled = false;
-      guessInput.value = "";
-      playersDiv.innerHTML = "";
-      guessed = [];
-      score = 0;
-      scoreDiv.textContent = "Score: 0";
-
+    async function loadTeams() {
       try {
-        const teamRes = await fetch("https://api.balldontlie.io/v1/teams");
-        const teamData = await teamRes.json();
-
-        const team = teamData.data[Math.floor(Math.random() * teamData.data.length)];
-        currentTeam = team.full_name;
-        teamNameDiv.textContent = "Team: " + currentTeam;
-
-        const playerRes = await fetch(`https://api.balldontlie.io/v1/players?team_ids[]=${team.id}&per_page=100`);
-        const playerData = await playerRes.json();
-        roster = playerData.data.map(p => `${p.first_name} ${p.last_name}`);
-
-        if (roster.length === 0) {
-          teamNameDiv.textContent = currentTeam + " has no player data yet.";
-        }
-
-      } catch (error) {
-        teamNameDiv.textContent = "Error loading team data.";
-        console.error(error);
+        const res = await fetch("rosters.json");
+        if (!res.ok) throw new Error("Failed to load JSON");
+        teams = await res.json();
+        console.log("Teams loaded:", Object.keys(teams).length);
+      } catch (err) {
+        console.error("Error loading rosters:", err);
+        alert("Failed to load NBA rosters. Please check rosters.json.");
       }
     }
 
-    guessInput.addEventListener("keydown", function(e) {
-      if (e.key === "Enter") {
-        const guess = guessInput.value.trim();
-        if (roster.includes(guess) && !guessed.includes(guess)) {
-          guessed.push(guess);
-          score++;
-          scoreDiv.textContent = "Score: " + score;
+    function startGame() {
+      if (Object.keys(teams).length === 0) {
+        alert("Rosters not loaded yet!");
+        return;
+      }
+      // Pick a random team
+      const teamNames = Object.keys(teams);
+      currentTeam = teamNames[Math.floor(Math.random() * teamNames.length)];
+      roster = teams[currentTeam];
+      guessed = [];
+      score = 0;
 
-          const span = document.createElement("span");
-          span.className = "player";
-          span.textContent = guess;
-          playersDiv.appendChild(span);
-        }
-        guessInput.value = "";
+      document.getElementById("teamName").textContent = currentTeam;
+      document.getElementById("guessedPlayers").innerHTML = "";
+      document.getElementById("score").textContent = "Score: 0";
+      document.getElementById("inputArea").style.display = "block";
+    }
+
+    function checkGuess() {
+      const input = document.getElementById("guessInput");
+      const guess = input.value.trim();
+      input.value = "";
+
+      if (guess === "") return;
+
+      // Compare ignoring case
+      const match = roster.find(p => p.toLowerCase() === guess.toLowerCase());
+      if (match && !guessed.includes(match)) {
+        guessed.push(match);
+        score++;
+        document.getElementById("score").textContent = "Score: " + score;
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        chip.textContent = match;
+        document.getElementById("guessedPlayers").appendChild(chip);
+      }
+    }
+
+    document.getElementById("startBtn").addEventListener("click", startGame);
+    document.getElementById("guessBtn").addEventListener("click", checkGuess);
+    document.getElementById("guessInput").addEventListener("keypress", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        checkGuess();
       }
     });
+
+    loadTeams();
   </script>
 </body>
 </html>
