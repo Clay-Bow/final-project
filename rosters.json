@@ -1,0 +1,37 @@
+{
+  "Atlanta Hawks": [
+    "Trae Young",
+    "De'Andre Hunter",
+    "Jalen Johnson",
+    "Clint Capela",
+    "Bogdan Bogdanovic"
+  ],
+  "Boston Celtics": [
+    "Jayson Tatum",
+    "Jaylen Brown",
+    "Jrue Holiday",
+    "Kristaps Porzingis",
+    "Derrick White"
+  ],
+  "Golden State Warriors": [
+    "Stephen Curry",
+    "Klay Thompson",
+    "Draymond Green",
+    "Andrew Wiggins",
+    "Kevon Looney"
+  ],
+  "Los Angeles Lakers": [
+    "LeBron James",
+    "Anthony Davis",
+    "Austin Reaves",
+    "D'Angelo Russell",
+    "Rui Hachimura"
+  ],
+  "Milwaukee Bucks": [
+    "Giannis Antetokounmpo",
+    "Khris Middleton",
+    "Brook Lopez",
+    "Damian Lillard",
+    "Bobby Portis"
+  ]
+}
