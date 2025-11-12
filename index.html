@@ -81,16 +81,13 @@
       scoreDiv.textContent = "Score: 0";
 
       try {
-        // ✅ Correct API link
         const teamRes = await fetch("https://api.balldontlie.io/v1/teams");
         const teamData = await teamRes.json();
 
-        // Pick a random team
         const team = teamData.data[Math.floor(Math.random() * teamData.data.length)];
         currentTeam = team.full_name;
         teamNameDiv.textContent = "Team: " + currentTeam;
 
-        // Fetch players for that team
         const playerRes = await fetch(`https://api.balldontlie.io/v1/players?team_ids[]=${team.id}&per_page=100`);
         const playerData = await playerRes.json();
         roster = playerData.data.map(p => `${p.first_name} ${p.last_name}`);
