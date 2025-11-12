@@ -4,10 +4,46 @@
   <meta charset="UTF-8">
   <title>NBA Roster Quiz</title>
   <style>
-    body { font-family: Arial; text-align: center; background: #111; color: #fff; }
-    #game { background: #222; padding: 20px; border-radius: 10px; display: inline-block; }
-    input, button { margin: 10px; padding: 8px; }
-    .player { display: inline-block; background: #0a0; margin: 4px; padding: 5px 10px; border-radius: 5px; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: #fff;
+      text-align: center;
+      padding: 30px;
+    }
+
+    #game {
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
+      display: inline-block;
+      width: 350px;
+    }
+
+    input, button {
+      padding: 8px;
+      margin: 8px;
+      border: none;
+      border-radius: 6px;
+    }
+
+    button {
+      background-color: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1d4ed8;
+    }
+
+    .player {
+      display: inline-block;
+      background-color: #16a34a;
+      padding: 4px 10px;
+      margin: 4px;
+      border-radius: 6px;
+    }
   </style>
 </head>
 <body>
@@ -15,7 +51,7 @@
   <div id="game">
     <div id="team-name">Press Start</div>
     <button id="startBtn">Start Game</button><br>
-    <input id="guessInput" placeholder="Enter player name..." disabled>
+    <input id="guessInput" type="text" placeholder="Enter player name..." disabled><br>
     <div id="score">Score: 0</div>
     <div id="players"></div>
   </div>
@@ -42,20 +78,30 @@
       playersDiv.innerHTML = "";
       guessed = [];
       score = 0;
+      scoreDiv.textContent = "Score: 0";
 
       try {
-        const teamRes = await fetch("https://www.balldontlie.io/api/v1/teams");
+        // ✅ Correct API link
+        const teamRes = await fetch("https://api.balldontlie.io/v1/teams");
         const teamData = await teamRes.json();
+
+        // Pick a random team
         const team = teamData.data[Math.floor(Math.random() * teamData.data.length)];
         currentTeam = team.full_name;
         teamNameDiv.textContent = "Team: " + currentTeam;
 
-        const playerRes = await fetch(`https://www.balldontlie.io/api/v1/players?team_ids[]=${team.id}&per_page=100`);
+        // Fetch players for that team
+        const playerRes = await fetch(`https://api.balldontlie.io/v1/players?team_ids[]=${team.id}&per_page=100`);
         const playerData = await playerRes.json();
         roster = playerData.data.map(p => `${p.first_name} ${p.last_name}`);
 
-      } catch (e) {
+        if (roster.length === 0) {
+          teamNameDiv.textContent = currentTeam + " has no player data yet.";
+        }
+
+      } catch (error) {
         teamNameDiv.textContent = "Error loading team data.";
+        console.error(error);
       }
     }
 
@@ -66,6 +112,7 @@
           guessed.push(guess);
           score++;
           scoreDiv.textContent = "Score: " + score;
+
           const span = document.createElement("span");
           span.className = "player";
           span.textContent = guess;
@@ -77,4 +124,3 @@
   </script>
 </body>
 </html>
-
