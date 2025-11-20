@@ -137,7 +137,7 @@
 
     async function loadPlayers(){
       try{
-        const res = await fetch('players.json');
+        const res = await fetch('rosters.json');
         if(!res.ok) throw new Error('players.json not found (status ' + res.status + ')');
         rosters = await res.json();
         console.log('Loaded players.json. Teams:', Object.keys(rosters).length);
