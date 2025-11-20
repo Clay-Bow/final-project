@@ -15,7 +15,7 @@
       padding: 20px;
     }
 
-    header, main, footer {
+    header, main {
       width: 100%;
       max-width: 600px;
       text-align: center;
@@ -54,26 +54,24 @@
       border-radius: 12px;
       margin: 4px 0;
     }
+
+    #timer {
+      margin-top: 10px;
+      font-size: 1.2em;
+      color: #ffcc00;
+    }
   </style>
 </head>
 <body>
   <header>
     <h1>NBA Roster Quiz</h1>
-    <p>Guess as many players as you can for each NBA team!</p>
+    <p>Guess as many players as you can before time runs out!</p>
   </header>
 
   <main>
     <section>
-      <label for="teamSelect">Select a team:</label>
-      <select id="teamSelect">
-        <option value="">--Choose a team--</option>
-        <option value="1">Golden State Warriors</option>
-        <option value="2">Los Angeles Lakers</option>
-        <option value="3">Milwaukee Bucks</option>
-        <option value="4">Dallas Mavericks</option>
-        <option value="5">Denver Nuggets</option>
-      </select>
       <button id="startBtn">Start Game</button>
+      <div id="timer">Time: 60</div>
     </section>
 
     <section id="inputArea" style="display:none;">
@@ -87,18 +85,18 @@
     </section>
   </main>
 
-  <footer>
-    <p>NBA Quiz Game &copy; 2025</p>
-  </footer>
-
   <script>
     let rosters = {};
     let guessed = [];
     let score = 0;
+    let timeLeft = 60;
+    let timerInterval;
+    let currentTeamId;
 
+    // Load players.json on page load
     async function loadPlayers() {
       try {
-        const res = await fetch("rosters.json");
+        const res = await fetch("players.json");
         if (!res.ok) throw new Error("Failed to load players.json");
         rosters = await res.json();
         console.log("Players loaded:", rosters);
@@ -109,20 +107,29 @@
     }
 
     function startGame() {
-      const teamSelect = document.getElementById("teamSelect");
-      const teamId = teamSelect.value;
-
-      if (!teamId) {
-        alert("Please select a team!");
-        return;
-      }
+      // Pick a random team from 1 to 30
+      currentTeamId = Math.floor(Math.random() * 30) + 1;
+      window.currentRoster = rosters[currentTeamId] || [];
 
       guessed = [];
       score = 0;
+      timeLeft = 60;
       document.getElementById("score").textContent = "Score: 0";
       document.getElementById("guessedPlayers").innerHTML = "";
       document.getElementById("inputArea").style.display = "block";
-      window.currentRoster = rosters[teamId] || [];
+      document.getElementById("timer").textContent = "Time: 60";
+
+      // Start countdown
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").textContent = "Time: " + timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          alert("Time's up! You guessed " + score + " players.");
+          document.getElementById("inputArea").style.display = "none";
+        }
+      }, 1000);
     }
 
     function checkGuess() {
@@ -156,6 +163,7 @@
       }
     });
 
+    // Load players when page opens
     loadPlayers();
   </script>
 </body>
