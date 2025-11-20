@@ -25,6 +25,11 @@
       color: #ffcc00;
     }
 
+    h2 {
+      color: #ffcc00;
+      margin-bottom: 10px;
+    }
+
     input {
       padding: 8px;
       border-radius: 5px;
@@ -34,7 +39,7 @@
 
     button {
       padding: 8px 12px;
-      margin-left: 5px;
+      margin: 5px;
       background: #ffcc00;
       border: none;
       border-radius: 5px;
@@ -60,6 +65,12 @@
       font-size: 1.2em;
       color: #ffcc00;
     }
+
+    #highScore {
+      margin-top: 10px;
+      font-size: 1em;
+      color: #ffcc00;
+    }
   </style>
 </head>
 <body>
@@ -69,9 +80,14 @@
   </header>
 
   <main>
+    <h2 id="teamName"></h2>
+    <div id="timer">Time: 60</div>
+    <div id="highScore">High Score: 0</div>
+
     <section>
       <button id="startBtn">Start Game</button>
-      <div id="timer">Time: 60</div>
+      <button id="resetBtn" style="display:none;">Reset Game</button>
+      <button id="playAgainBtn" style="display:none;">Play Again</button>
     </section>
 
     <section id="inputArea" style="display:none;">
@@ -89,9 +105,14 @@
     let rosters = {};
     let guessed = [];
     let score = 0;
+    let highScore = localStorage.getItem('highScore') || 0;
     let timeLeft = 60;
     let timerInterval;
     let currentTeamId;
+    let currentTeamName;
+    let currentRoster = [];
+
+    document.getElementById('highScore').textContent = "High Score: " + highScore;
 
     async function loadPlayers() {
       try {
@@ -106,28 +127,52 @@
     }
 
     function startGame() {
-      // Pick a random team from 1 to 30
       currentTeamId = Math.floor(Math.random() * 30) + 1;
-      window.currentRoster = rosters[currentTeamId] || [];
+      currentRoster = rosters[currentTeamId] || [];
+      currentTeamName = getTeamName(currentTeamId);
 
       guessed = [];
       score = 0;
       timeLeft = 60;
-      document.getElementById("score").textContent = "Score: 0";
+
+      document.getElementById("teamName").textContent = "Team: " + currentTeamName;
+      document.getElementById("score").textContent = "Score: " + score;
       document.getElementById("guessedPlayers").innerHTML = "";
       document.getElementById("inputArea").style.display = "block";
-      document.getElementById("timer").textContent = "Time: 60";
+
+      document.getElementById("startBtn").style.display = "none";
+      document.getElementById("playAgainBtn").style.display = "none";
+      document.getElementById("resetBtn").style.display = "inline-block";
 
       clearInterval(timerInterval);
       timerInterval = setInterval(() => {
         timeLeft--;
         document.getElementById("timer").textContent = "Time: " + timeLeft;
-        if (timeLeft <= 0) {
-          clearInterval(timerInterval);
-          alert("Time's up! You guessed " + score + " players.");
-          document.getElementById("inputArea").style.display = "none";
-        }
+        if (timeLeft <= 0) endGame();
       }, 1000);
+    }
+
+    function endGame() {
+      clearInterval(timerInterval);
+      alert(`Time's up! You guessed ${score} players.`);
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('highScore', highScore);
+        document.getElementById("highScore").textContent = "High Score: " + highScore;
+      }
+
+      document.getElementById("inputArea").style.display = "none";
+      document.getElementById("resetBtn").style.display = "none";
+      document.getElementById("playAgainBtn").style.display = "inline-block";
+    }
+
+    function resetGame() {
+      guessed = [];
+      score = 0;
+      timeLeft = 60;
+      document.getElementById("score").textContent = "Score: " + score;
+      document.getElementById("guessedPlayers").innerHTML = "";
+      document.getElementById("timer").textContent = "Time: " + timeLeft;
     }
 
     function checkGuess() {
@@ -137,10 +182,7 @@
 
       if (!guess) return;
 
-      const match = window.currentRoster.find(
-        p => p.toLowerCase() === guess.toLowerCase()
-      );
-
+      const match = currentRoster.find(p => p.toLowerCase() === guess.toLowerCase());
       if (match && !guessed.includes(match)) {
         guessed.push(match);
         score++;
@@ -152,7 +194,45 @@
       }
     }
 
+    function getTeamName(teamId) {
+      const teamNames = {
+        "1": "Golden State Warriors",
+        "2": "Los Angeles Lakers",
+        "3": "Milwaukee Bucks",
+        "4": "Dallas Mavericks",
+        "5": "Denver Nuggets",
+        "6": "Philadelphia 76ers",
+        "7": "Atlanta Hawks",
+        "8": "Memphis Grizzlies",
+        "9": "Cleveland Cavaliers",
+        "10": "Oklahoma City Thunder",
+        "11": "Phoenix Suns",
+        "12": "New Orleans Pelicans",
+        "13": "Boston Celtics",
+        "14": "Minnesota Timberwolves",
+        "15": "Charlotte Hornets",
+        "16": "Miami Heat",
+        "17": "Philadelphia 76ers",
+        "18": "New York Knicks",
+        "19": "Cleveland Cavaliers",
+        "20": "Oklahoma City Thunder",
+        "21": "Phoenix Suns",
+        "22": "New Orleans Pelicans",
+        "23": "Boston Celtics",
+        "24": "Minnesota Timberwolves",
+        "25": "Charlotte Hornets",
+        "26": "Miami Heat",
+        "27": "Philadelphia 76ers",
+        "28": "New York Knicks",
+        "29": "Cleveland Cavaliers",
+        "30": "Oklahoma City Thunder"
+      };
+      return teamNames[teamId] || "Unknown Team";
+    }
+
     document.getElementById("startBtn").addEventListener("click", startGame);
+    document.getElementById("resetBtn").addEventListener("click", resetGame);
+    document.getElementById("playAgainBtn").addEventListener("click", startGame);
     document.getElementById("guessBtn").addEventListener("click", checkGuess);
     document.getElementById("guessInput").addEventListener("keypress", e => {
       if (e.key === "Enter") {
