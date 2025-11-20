@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NBA Roster Quiz</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NBA Quiz Game</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,19 +14,24 @@
       align-items: center;
       padding: 20px;
     }
+
+    header, main, footer {
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+    }
+
     h1 {
       color: #ffcc00;
     }
-    #teamName {
-      font-size: 1.3em;
-      margin: 20px 0;
-    }
+
     input {
       padding: 8px;
       border-radius: 5px;
       border: none;
       width: 220px;
     }
+
     button {
       padding: 8px 12px;
       margin-left: 5px;
@@ -36,70 +41,88 @@
       font-weight: bold;
       cursor: pointer;
     }
+
     #guessedPlayers {
       margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      max-width: 600px;
+      list-style: none;
+      padding: 0;
     }
-    .chip {
+
+    #guessedPlayers li {
       background: #1e293b;
       padding: 6px 10px;
       border-radius: 12px;
+      margin: 4px 0;
     }
   </style>
 </head>
 <body>
-  <h1>NBA Roster Quiz</h1>
-  <p>Guess as many players as you can from the current team!</p>
+  <header>
+    <h1>NBA Roster Quiz</h1>
+    <p>Guess as many players as you can for each NBA team!</p>
+  </header>
 
-  <button id="startBtn">Start Game</button>
-  <h2 id="teamName"></h2>
+  <main>
+    <section>
+      <label for="teamSelect">Select a team:</label>
+      <select id="teamSelect">
+        <option value="">--Choose a team--</option>
+        <option value="1">Golden State Warriors</option>
+        <option value="2">Los Angeles Lakers</option>
+        <option value="3">Milwaukee Bucks</option>
+        <option value="4">Dallas Mavericks</option>
+        <option value="5">Denver Nuggets</option>
+      </select>
+      <button id="startBtn">Start Game</button>
+    </section>
 
-  <div id="inputArea" style="display:none;">
-    <input type="text" id="guessInput" placeholder="Enter player name..." />
-    <button id="guessBtn">Guess</button>
-  </div>
+    <section id="inputArea" style="display:none;">
+      <input type="text" id="guessInput" placeholder="Enter player name...">
+      <button id="guessBtn">Guess</button>
+      <div id="score">Score: 0</div>
+    </section>
 
-  <div id="score">Score: 0</div>
-  <div id="guessedPlayers"></div>
+    <section>
+      <ul id="guessedPlayers"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>NBA Quiz Game &copy; 2025</p>
+  </footer>
 
   <script>
-    let teams = {};
-    let currentTeam = "";
-    let roster = [];
+    let rosters = {};
     let guessed = [];
     let score = 0;
 
-    async function loadTeams() {
+    async function loadPlayers() {
       try {
-        const res = await fetch("rosters.json");
-        if (!res.ok) throw new Error("Failed to load JSON");
-        teams = await res.json();
-        console.log("Teams loaded:", Object.keys(teams).length);
+        const res = await fetch("players.json");
+        if (!res.ok) throw new Error("Failed to load players.json");
+        rosters = await res.json();
+        console.log("Players loaded:", rosters);
       } catch (err) {
-        console.error("Error loading rosters:", err);
-        alert("Failed to load NBA rosters. Please check rosters.json.");
+        console.error(err);
+        alert("Failed to load players data.");
       }
     }
 
     function startGame() {
-      if (Object.keys(teams).length === 0) {
-        alert("Rosters not loaded yet!");
+      const teamSelect = document.getElementById("teamSelect");
+      const teamId = teamSelect.value;
+
+      if (!teamId) {
+        alert("Please select a team!");
         return;
       }
-      // Pick a random team
-      const teamNames = Object.keys(teams);
-      currentTeam = teamNames[Math.floor(Math.random() * teamNames.length)];
-      roster = teams[currentTeam];
+
       guessed = [];
       score = 0;
-
-      document.getElementById("teamName").textContent = currentTeam;
-      document.getElementById("guessedPlayers").innerHTML = "";
       document.getElementById("score").textContent = "Score: 0";
+      document.getElementById("guessedPlayers").innerHTML = "";
       document.getElementById("inputArea").style.display = "block";
+      window.currentRoster = rosters[teamId] || [];
     }
 
     function checkGuess() {
@@ -107,18 +130,20 @@
       const guess = input.value.trim();
       input.value = "";
 
-      if (guess === "") return;
+      if (!guess) return;
 
-      // Compare ignoring case
-      const match = roster.find(p => p.toLowerCase() === guess.toLowerCase());
+      const match = window.currentRoster.find(
+        p => p.toLowerCase() === guess.toLowerCase()
+      );
+
       if (match && !guessed.includes(match)) {
         guessed.push(match);
         score++;
         document.getElementById("score").textContent = "Score: " + score;
-        const chip = document.createElement("div");
-        chip.className = "chip";
-        chip.textContent = match;
-        document.getElementById("guessedPlayers").appendChild(chip);
+
+        const li = document.createElement("li");
+        li.textContent = match;
+        document.getElementById("guessedPlayers").appendChild(li);
       }
     }
 
@@ -131,7 +156,7 @@
       }
     });
 
-    loadTeams();
+    loadPlayers();
   </script>
 </body>
 </html>
