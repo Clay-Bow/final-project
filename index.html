@@ -187,29 +187,32 @@
     }
 
     function checkGuess() {
-      const input = document.getElementById("guessInput").value.trim().toLowerCase();
-      if (!input) return;
+      const inputEl = document.getElementById("guessInput");
+      const raw = inputEl.value.trim();
+      if (!raw) return;
+    
+      const guess = raw.toLowerCase();
     
       for (let player of currentRoster) {
-        const fullName = player.name.toLowerCase();
-        const lastName = player.name.split(" ").pop().toLowerCase();
+        const displayName = (typeof player === "string") ? player : (player.name || String(player));
+        const fullName = displayName.toLowerCase();
+        const lastName = fullName.split(" ").pop();
     
-        // If guessed full name or last name only
-        if (!guessed.includes(fullName) && (input === fullName || input === lastName)) {
+        if (!guessed.includes(fullName) && (guess === fullName || guess === lastName)) {
           guessed.push(fullName);
           score++;
     
-          document.getElementById("guessedPlayers").innerHTML += `<li>${player.name}</li>`;
+          const li = document.createElement("li");
+          li.textContent = displayName;
+          document.getElementById("guessedPlayers").appendChild(li);
+    
           document.getElementById("score").textContent = "Score: " + score;
     
-          document.getElementById("guessInput").value = "";
+          inputEl.value = "";
+          inputEl.focus();
           return;
         }
       }
-    
-      document.getElementById("guessInput").value = "";
-    }
-
     function getTeamName(teamId) {
       const teamNames = {
         "1": "Golden State Warriors",
