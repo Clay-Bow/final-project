@@ -167,12 +167,24 @@
     }
 
     function resetGame() {
+      clearInterval(timerInterval); // stop the countdown
       guessed = [];
       score = 0;
       timeLeft = 60;
-      document.getElementById("score").textContent = "Score: " + score;
+      currentTeamId = null;
+      currentTeamName = "";
+      currentRoster = [];
+    
+      // Reset UI
+      document.getElementById("score").textContent = "Score: 0";
       document.getElementById("guessedPlayers").innerHTML = "";
-      document.getElementById("timer").textContent = "Time: " + timeLeft;
+      document.getElementById("timer").textContent = "Time: 60";
+      document.getElementById("teamName").textContent = "";
+    
+      document.getElementById("inputArea").style.display = "none";
+      document.getElementById("resetBtn").style.display = "none";
+      document.getElementById("startBtn").style.display = "inline-block";
+      document.getElementById("playAgainBtn").style.display = "none";
     }
 
     function checkGuess() {
