@@ -1,37 +1,32 @@
 {
-  "Atlanta Hawks": [
-    "Trae Young",
-    "De'Andre Hunter",
-    "Jalen Johnson",
-    "Clint Capela",
-    "Bogdan Bogdanovic"
-  ],
-  "Boston Celtics": [
-    "Jayson Tatum",
-    "Jaylen Brown",
-    "Jrue Holiday",
-    "Kristaps Porzingis",
-    "Derrick White"
-  ],
-  "Golden State Warriors": [
-    "Stephen Curry",
-    "Klay Thompson",
-    "Draymond Green",
-    "Andrew Wiggins",
-    "Kevon Looney"
-  ],
-  "Los Angeles Lakers": [
-    "LeBron James",
-    "Anthony Davis",
-    "Austin Reaves",
-    "D'Angelo Russell",
-    "Rui Hachimura"
-  ],
-  "Milwaukee Bucks": [
-    "Giannis Antetokounmpo",
-    "Khris Middleton",
-    "Brook Lopez",
-    "Damian Lillard",
-    "Bobby Portis"
-  ]
+  "1": ["Stephen Curry","Klay Thompson","Draymond Green","Andrew Wiggins","Kevon Looney"],
+  "2": ["LeBron James","Anthony Davis","D'Angelo Russell","Austin Reaves","Rui Hachimura"],
+  "3": ["Giannis Antetokounmpo","Khris Middleton","Brook Lopez","Bobby Portis","Damian Lillard"],
+  "4": ["Luka Dončić","Kyrie Irving","Tim Hardaway Jr.","Grant Williams","Josh Green"],
+  "5": ["Nikola Jokic","Jamal Murray","Michael Porter Jr.","Aaron Gordon","Kentavious Caldwell-Pope"],
+  "6": ["Kevin Durant","Joel Embiid","James Harden","Tyrese Maxey","Tobias Harris"],
+  "7": ["Trae Young","John Collins","Dejounte Murray","Clint Capela","Bogdan Bogdanovic"],
+  "8": ["Ja Morant","Jaren Jackson Jr.","Desmond Bane","Tyus Jones","Brandon Clarke"],
+  "9": ["Donovan Mitchell","Bojan Bogdanovic","Lauri Markkanen","Collin Sexton","Darius Garland"],
+  "10": ["Shai Gilgeous-Alexander","Josh Giddey","Luguentz Dort","Isaac Okoro","Darius Bazley"],
+  "11": ["Devin Booker","Kevin Durant","Bradley Beal","Chris Paul","Mikal Bridges"],
+  "12": ["Zion Williamson","Brandon Ingram","CJ McCollum","Jonas Valanciunas","Herbert Jones"],
+  "13": ["Jayson Tatum","Jaylen Brown","Marcus Smart","Al Horford","Robert Williams III"],
+  "14": ["Karl-Anthony Towns","Anthony Edwards","D'Angelo Russell","Ricky Rubio","Jarred Vanderbilt"],
+  "15": ["LaMelo Ball","Terry Rozier","Gordon Hayward","PJ Washington","Mason Plumlee"],
+  "16": ["Bam Adebayo","Jimmy Butler","Tyler Herro","Kyle Lowry","Max Strus"],
+  "17": ["Joel Embiid","James Harden","Tyrese Maxey","Tobias Harris","PJ Tucker"],
+  "18": ["Julius Randle","Jalen Brunson","RJ Barrett","Mitchell Robinson","Derrick Rose"],
+  "19": ["Donovan Mitchell","Bojan Bogdanovic","Lauri Markkanen","Collin Sexton","Darius Garland"],
+  "20": ["Shai Gilgeous-Alexander","Josh Giddey","Luguentz Dort","Isaac Okoro","Darius Bazley"],
+  "21": ["Devin Booker","Kevin Durant","Bradley Beal","Chris Paul","Mikal Bridges"],
+  "22": ["Zion Williamson","Brandon Ingram","CJ McCollum","Jonas Valanciunas","Herbert Jones"],
+  "23": ["Jayson Tatum","Jaylen Brown","Marcus Smart","Al Horford","Robert Williams III"],
+  "24": ["Karl-Anthony Towns","Anthony Edwards","D'Angelo Russell","Ricky Rubio","Jarred Vanderbilt"],
+  "25": ["LaMelo Ball","Terry Rozier","Gordon Hayward","PJ Washington","Mason Plumlee"],
+  "26": ["Bam Adebayo","Jimmy Butler","Tyler Herro","Kyle Lowry","Max Strus"],
+  "27": ["Joel Embiid","James Harden","Tyrese Maxey","Tobias Harris","PJ Tucker"],
+  "28": ["Julius Randle","Jalen Brunson","RJ Barrett","Mitchell Robinson","Derrick Rose"],
+  "29": ["Donovan Mitchell","Bojan Bogdanovic","Lauri Markkanen","Collin Sexton","Darius Garland"],
+  "30": ["Shai Gilgeous-Alexander","Josh Giddey","Luguentz Dort","Isaac Okoro","Darius Bazley"]
 }
