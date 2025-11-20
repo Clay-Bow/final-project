@@ -98,7 +98,7 @@
 
     async function loadPlayers() {
       try {
-        const res = await fetch("players.json");
+        const res = await fetch("rosters.json");
         if (!res.ok) throw new Error("Failed to load players.json");
         rosters = await res.json();
         console.log("Players loaded:", rosters);
