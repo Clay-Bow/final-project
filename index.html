@@ -6,94 +6,86 @@
   <title>NBA Roster Quiz</title>
   <style>
     :root{
-      --bg:#0b1120; --fg:#f0f4f8; --accent:#ffcc00; --card:#1e293b;
+      --bg:#0b1120; --fg:#f0f4f8; --accent:#ffcc00; --card:#16202b;
     }
-    html,body{height:100%; margin:0}
+    *{box-sizing:border-box}
+    html,body{height:100%; margin:0; font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
     body{
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background:var(--bg); color:var(--fg);
-      display:flex; align-items:center; justify-content:center;
+      background:var(--bg);
+      color:var(--fg);
+      display:flex;
+      align-items:center;
+      justify-content:center;
       padding:24px;
     }
-    .app{
-      width:100%; max-width:780px;
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
-      border-radius:12px; padding:20px; box-sizing:border-box;
-      box-shadow: 0 6px 30px rgba(0,0,0,0.6);
+
+    .wrap{
+      width:100%; max-width:760px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+      border-radius:12px; padding:20px; box-shadow:0 10px 40px rgba(0,0,0,0.6);
     }
 
-    header{ text-align:center; margin-bottom:12px }
-    h1{ margin:6px 0; color:var(--accent) }
-    p.lead{ margin:6px 0 18px; opacity:0.9 }
+    header{ text-align:center; margin-bottom:14px }
+    h1{ margin:8px 0; color:var(--accent); font-size:1.6rem }
+    p.lead{ margin:6px 0 0; opacity:0.9 }
 
-    .controls{
-      display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:center;
-      margin-bottom:12px;
+    .center{
+      text-align:center;
     }
 
+    .meta{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:14px; }
+    .card{ background:var(--card); padding:10px 14px; border-radius:10px; min-width:140px; text-align:center; }
+    #teamName{ color:var(--accent); font-weight:700; }
+
+    .controls{ display:flex; gap:8px; justify-content:center; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
     button{
-      background:var(--accent); color:#0b1120; border:none; padding:8px 12px; border-radius:8px;
-      font-weight:700; cursor:pointer;
+      background:var(--accent); color:#0b1120; border:none; padding:9px 14px; border-radius:8px; font-weight:700; cursor:pointer;
     }
-    button.ghost{ background:transparent; color:var(--accent); border:1px solid rgba(255,204,0,0.15) }
+    button.ghost{ background:transparent; color:var(--accent); border:1px solid rgba(255,204,0,0.12) }
 
-    .meta-row{ display:flex; gap:12px; align-items:center; justify-content:center; margin-bottom:12px; flex-wrap:wrap;}
-    .card{
-      background:var(--card); padding:10px 14px; border-radius:10px; min-width:120px; text-align:center;
-    }
-    #teamName{ font-weight:700; color:var(--accent); font-size:1.05rem; }
-    #timer{ font-weight:700; color:var(--accent); font-size:1.05rem; }
+    main{ display:flex; gap:18px; align-items:flex-start; justify-content:center; flex-wrap:wrap; }
+    .left, .right{ flex:1 1 300px; min-width:260px; }
 
-    main{ display:flex; gap:20px; align-items:flex-start; justify-content:center; flex-wrap:wrap; }
-    .left, .right{ flex:1 1 320px; min-width:280px; }
-
-    .input-area{ display:flex; gap:8px; align-items:center; justify-content:center; margin-bottom:8px; }
+    .input-row{ display:flex; gap:8px; align-items:center; justify-content:center; margin-bottom:8px; }
     input[type="text"]{
-      padding:8px 10px; border-radius:8px; border:none; width:220px; box-sizing:border-box;
-      background: rgba(255,255,255,0.03); color:var(--fg);
+      padding:10px 12px; border-radius:8px; border:none; width:220px; background: rgba(255,255,255,0.03); color:var(--fg);
     }
 
-    #score{ margin-top:6px; font-weight:700; text-align:center }
+    #score{ margin-top:8px; font-weight:700; text-align:center; }
 
-    ul#guessedPlayers{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:6px; }
-    ul#guessedPlayers li{
-      background:rgba(255,255,255,0.03); padding:8px 10px; border-radius:8px; font-weight:600;
-    }
+    ul#guessedPlayers{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px; align-items:center; }
+    ul#guessedPlayers li{ background: rgba(255,255,255,0.03); padding:8px 12px; border-radius:8px; width:100%; max-width:360px; text-align:center; font-weight:600; }
 
-    footer{ margin-top:16px; text-align:center; opacity:0.85; font-size:0.9rem; color:var(--fg) }
-
-    @media (max-width:520px){
-      .input-area{ flex-direction:column }
-      input[type="text"]{ width:100% }
-      .controls{ flex-direction:column }
+    @media (max-width:560px){
+      input[type="text"]{ width:160px }
+      .card{ min-width:110px }
     }
   </style>
 </head>
 <body>
-  <div class="app" role="application" aria-label="NBA Roster Quiz">
-    <header>
+  <div class="wrap" role="application" aria-label="NBA Roster Quiz">
+    <header class="center">
       <h1>NBA Roster Quiz</h1>
-      <p class="lead">Guess as many players as you can from the shown team before time runs out!</p>
+      <p class="lead">Guess as many players as you can for the shown team in 60 seconds.</p>
     </header>
 
-    <div class="controls" aria-hidden="false">
+    <div class="meta">
       <div class="card" id="teamName">Team: —</div>
       <div class="card" id="timer">Time: 60</div>
       <div class="card" id="highScore">High Score: 0</div>
     </div>
 
     <main>
-      <div class="left">
-        <div style="text-align:center; margin-bottom:8px">
+      <div class="left center">
+        <div class="controls">
           <button id="startBtn">Start Game</button>
-          <button id="resetBtn" style="display:none" class="ghost">Reset Game</button>
+          <button id="resetBtn" class="ghost" style="display:none">Reset Game</button>
           <button id="playAgainBtn" style="display:none">Play Again</button>
         </div>
 
         <div id="inputArea" style="display:none">
-          <div class="input-area">
-            <label for="guessInput" style="position:absolute; left:-9999px">Guess</label>
-            <input id="guessInput" type="text" placeholder="Type last name or full name..." autocomplete="off" />
+          <div class="input-row">
+            <label for="guessInput" style="position:absolute;left:-9999px">Guess player</label>
+            <input id="guessInput" type="text" placeholder="Type first / last / full name..." autocomplete="off" />
             <button id="guessBtn">Guess</button>
           </div>
           <div id="score" class="card">Score: 0</div>
@@ -101,16 +93,12 @@
       </div>
 
       <div class="right">
-        <section aria-live="polite">
-          <h3 style="margin-top:0; margin-bottom:8px">Guessed Players</h3>
-          <ul id="guessedPlayers" aria-label="Guessed players list"></ul>
+        <section aria-live="polite" class="center">
+          <h3 style="margin:0 0 8px 0">Guessed Players</h3>
+          <ul id="guessedPlayers" aria-label="Guessed players list" style="display:none"></ul>
         </section>
       </div>
     </main>
-
-    <footer>
-      <small>Built for your project — uses a local players.json file.</small>
-    </footer>
   </div>
 
   <script>
@@ -128,10 +116,10 @@
       "26":"Miami Heat","27":"Philadelphia 76ers","28":"New York Knicks","29":"Cleveland Cavaliers","30":"Oklahoma City Thunder"
     };
 
-    let rosters = {};                 
+    let rosters = {};                
     let currentRoster = [];          
-    let normalizedRoster = [];        
-    let guessed = [];                
+    let normalizedRoster = [];      
+    let guessed = new Set();     
     let score = 0;
     let timeLeft = GAME_SECONDS;
     let timerInterval = null;
@@ -141,43 +129,41 @@
     let highScore = parseInt(localStorage.getItem('nbahighscore') || '0', 10);
     document.getElementById('highScore').textContent = 'High Score: ' + highScore;
 
-    const normalize = str => str
-      .normalize('NFD')
-      .replace(/\p{Diacritic}/gu, '') 
+    const normalize = s => s
+      .normalize('NFD')              
+      .replace(/\p{Diacritic}/gu, '')
       .toLowerCase()
       .trim();
 
     async function loadPlayers(){
       try{
-        const res = await fetch('rosters.json');
+        const res = await fetch('players.json');
         if(!res.ok) throw new Error('players.json not found (status ' + res.status + ')');
         rosters = await res.json();
-        const keys = Object.keys(rosters);
-        if(keys.length === 0) console.warn('players.json empty');
-        console.log('Loaded players.json with teams:', keys.length);
+        console.log('Loaded players.json. Teams:', Object.keys(rosters).length);
         document.getElementById('startBtn').disabled = false;
-      } catch(err){
+      }catch(err){
         console.error('Failed to load players.json:', err);
-        alert('Failed to load players.json. Make sure the file is in the same folder and you serve the page via a local server or GitHub Pages.');
+        alert('Failed to load players.json. Make sure it is in the same folder and you serve the page via a server (not file://).');
         document.getElementById('startBtn').disabled = true;
       }
     }
 
-    function prepareRoster(fullNames){
-      currentRoster = Array.isArray(fullNames) ? fullNames.slice() : [];
-      normalizedRoster = currentRoster.map(fn => {
-        const full = normalize(fn);
-        const lastParts = full.split(' ');
-        const last = lastParts.length ? lastParts[lastParts.length - 1] : full;
-        return { full, last, display: fn };
+    function prepareRoster(arr){
+      currentRoster = Array.isArray(arr) ? arr.slice() : [];
+      normalizedRoster = currentRoster.map(fullName => {
+        const full = normalize(fullName);
+        const parts = full.split(/\s+/).filter(Boolean);
+        const first = parts.length ? parts[0] : full;
+        const last = parts.length ? parts[parts.length - 1] : full;
+        return { full, first, last, display: fullName };
       });
     }
 
-    function pickRandomTeam(){
-      const available = Object.keys(rosters).filter(k => Number(k) >=1 && Number(k) <=30);
-      if(available.length === 0) return null;
-      const idx = Math.floor(Math.random() * available.length);
-      return available[idx];
+    function pickRandomTeamId(){
+      const keys = Object.keys(rosters).filter(k => Number(k) >=1 && Number(k) <=30);
+      if(keys.length === 0) return null;
+      return keys[Math.floor(Math.random() * keys.length)];
     }
 
     function startGame(){
@@ -185,34 +171,38 @@
         alert('Players data not loaded yet. Wait a moment and try again.');
         return;
       }
-      const picked = pickRandomTeam();
-      if(!picked){
-        alert('No teams available in players.json');
+
+      const tid = pickRandomTeamId();
+      if(!tid){
+        alert('No teams in players.json');
         return;
       }
-      currentTeamId = picked;
-      const teamArray = rosters[String(currentTeamId)] || [];
-      prepareRoster(teamArray);
+      currentTeamId = tid;
+      prepareRoster(rosters[tid] || []);
 
-      guessed = []; score = 0; timeLeft = GAME_SECONDS; isPlaying = true;
+      guessed = new Set();
+      score = 0;
+      timeLeft = GAME_SECONDS;
+      isPlaying = true;
+
+      document.getElementById('teamName').textContent = TEAM_NAMES[tid] || ('Team ' + tid);
       document.getElementById('score').textContent = 'Score: ' + score;
-      document.getElementById('guessedPlayers').innerHTML = '';
-      document.getElementById('teamName').textContent = TEAM_NAMES[String(currentTeamId)] || ('Team ' + currentTeamId);
       document.getElementById('timer').textContent = 'Time: ' + timeLeft;
-
+      document.getElementById('guessedPlayers').innerHTML = '';
+      document.getElementById('guessedPlayers').style.display = 'block';
+      document.getElementById('inputArea').style.display = 'block';
       document.getElementById('startBtn').style.display = 'none';
       document.getElementById('resetBtn').style.display = 'inline-block';
       document.getElementById('playAgainBtn').style.display = 'none';
-      document.getElementById('inputArea').style.display = 'block';
       document.getElementById('guessInput').disabled = false;
       document.getElementById('guessInput').focus();
 
       clearInterval(timerInterval);
-      timerInterval = setInterval(() => {
+      timerInterval = setInterval(()=>{
         timeLeft--;
         document.getElementById('timer').textContent = 'Time: ' + timeLeft;
         if(timeLeft <= 0) endGame();
-      }, 1000);
+      },1000);
     }
 
     function endGame(){
@@ -228,9 +218,9 @@
         highScore = score;
         localStorage.setItem('nbahighscore', String(highScore));
         document.getElementById('highScore').textContent = 'High Score: ' + highScore;
-        setTimeout(()=> alert(`Time's up! You scored ${score}. New high score! 🎉`), 50);
-      }else{
-        setTimeout(()=> alert(`Time's up! You scored ${score}.`), 50);
+        setTimeout(()=> alert(`Time's up! You scored ${score}. New high score! 🎉`),50);
+      } else {
+        setTimeout(()=> alert(`Time's up! You scored ${score}.`),50);
       }
     }
 
@@ -238,12 +228,13 @@
       clearInterval(timerInterval);
       isPlaying = false;
       currentTeamId = null;
-      currentRoster = []; normalizedRoster = []; guessed = []; score = 0;
+      currentRoster = []; normalizedRoster = []; guessed = new Set(); score = 0;
       timeLeft = GAME_SECONDS;
       document.getElementById('teamName').textContent = 'Team: —';
       document.getElementById('timer').textContent = 'Time: ' + timeLeft;
       document.getElementById('score').textContent = 'Score: ' + score;
       document.getElementById('guessedPlayers').innerHTML = '';
+      document.getElementById('guessedPlayers').style.display = 'none';
       document.getElementById('inputArea').style.display = 'none';
       document.getElementById('resetBtn').style.display = 'none';
       document.getElementById('playAgainBtn').style.display = 'none';
@@ -259,16 +250,23 @@
 
       if(!guess) return;
 
-      for(const item of normalizedRoster){
-        if(item.full === guess && !guessed.includes(item.full)){
-          registerCorrect(item);
+      for(const p of normalizedRoster){
+        if(p.full === guess && !guessed.has(p.full)){
+          registerCorrect(p);
           return;
         }
       }
 
-      for(const item of normalizedRoster){
-        if(item.last === guess && !guessed.includes(item.full)){
-          registerCorrect(item);
+      for(const p of normalizedRoster){
+        if(p.last === guess && !guessed.has(p.full)){
+          registerCorrect(p);
+          return;
+        }
+      }
+
+      for(const p of normalizedRoster){
+        if(p.first === guess && !guessed.has(p.full)){
+          registerCorrect(p);
           return;
         }
       }
@@ -276,12 +274,12 @@
       flashWrong();
     }
 
-    function registerCorrect(item){
-      guessed.push(item.full);
+    function registerCorrect(p){
+      guessed.add(p.full);
       score++;
       document.getElementById('score').textContent = 'Score: ' + score;
       const li = document.createElement('li');
-      li.textContent = item.display;
+      li.textContent = p.display;
       document.getElementById('guessedPlayers').appendChild(li);
     }
 
@@ -289,19 +287,20 @@
       const input = document.getElementById('guessInput');
       input.style.transition = 'transform 0.08s';
       input.style.transform = 'translateX(-6px)';
-      setTimeout(()=> { input.style.transform = 'translateX(6px)'; }, 80);
-      setTimeout(()=> { input.style.transform = ''; }, 160);
+      setTimeout(()=> input.style.transform = 'translateX(6px)',80);
+      setTimeout(()=> input.style.transform = '',160);
     }
 
     document.getElementById('startBtn').addEventListener('click', startGame);
     document.getElementById('resetBtn').addEventListener('click', resetToStart);
     document.getElementById('playAgainBtn').addEventListener('click', startGame);
     document.getElementById('guessBtn').addEventListener('click', acceptGuess);
-    document.getElementById('guessInput').addEventListener('keypress', e => {
-      if(e.key === 'Enter') { e.preventDefault(); acceptGuess(); }
+    document.getElementById('guessInput').addEventListener('keypress', e=>{
+      if(e.key === 'Enter'){ e.preventDefault(); acceptGuess(); }
     });
 
-    document.getElementById('startBtn').disabled = true; 
+    document.getElementById('startBtn').disabled = true;
+    document.getElementById('guessedPlayers').style.display = 'none';
     loadPlayers();
   </script>
 </body>
