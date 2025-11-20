@@ -93,7 +93,6 @@
     let timerInterval;
     let currentTeamId;
 
-    // Load players.json on page load
     async function loadPlayers() {
       try {
         const res = await fetch("players.json");
@@ -119,7 +118,6 @@
       document.getElementById("inputArea").style.display = "block";
       document.getElementById("timer").textContent = "Time: 60";
 
-      // Start countdown
       clearInterval(timerInterval);
       timerInterval = setInterval(() => {
         timeLeft--;
@@ -163,7 +161,6 @@
       }
     });
 
-    // Load players when page opens
     loadPlayers();
   </script>
 </body>
