@@ -167,7 +167,7 @@
     }
 
     function resetGame() {
-      clearInterval(timerInterval); // stop the countdown
+      clearInterval(timerInterval); 
       guessed = [];
       score = 0;
       timeLeft = 60;
@@ -175,7 +175,6 @@
       currentTeamName = "";
       currentRoster = [];
     
-      // Reset UI
       document.getElementById("score").textContent = "Score: 0";
       document.getElementById("guessedPlayers").innerHTML = "";
       document.getElementById("timer").textContent = "Time: 60";
@@ -188,22 +187,26 @@
     }
 
     function checkGuess() {
-      const input = document.getElementById("guessInput");
-      const guess = input.value.trim();
-      input.value = "";
-
-      if (!guess) return;
-
-      const match = currentRoster.find(p => p.toLowerCase() === guess.toLowerCase());
-      if (match && !guessed.includes(match)) {
-        guessed.push(match);
-        score++;
-        document.getElementById("score").textContent = "Score: " + score;
-
-        const li = document.createElement("li");
-        li.textContent = match;
-        document.getElementById("guessedPlayers").appendChild(li);
+      const input = document.getElementById("guessInput").value.trim().toLowerCase();
+      if (!input) return;
+    
+      for (let player of currentRoster) {
+        const fullName = player.name.toLowerCase();
+        const lastName = player.name.split(" ").pop().toLowerCase();
+    
+        if (!guessed.includes(fullName) && (input === fullName || input === lastName)) {
+          guessed.push(fullName);
+          score++;
+    
+          document.getElementById("guessedPlayers").innerHTML += `<li>${player.name}</li>`;
+          document.getElementById("score").textContent = "Score: " + score;
+    
+          document.getElementById("guessInput").value = "";
+          return;
+        }
       }
+    
+      document.getElementById("guessInput").value = "";
     }
 
     function getTeamName(teamId) {
