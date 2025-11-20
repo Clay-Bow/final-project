@@ -194,6 +194,7 @@
         const fullName = player.name.toLowerCase();
         const lastName = player.name.split(" ").pop().toLowerCase();
     
+        // If guessed full name or last name only
         if (!guessed.includes(fullName) && (input === fullName || input === lastName)) {
           guessed.push(fullName);
           score++;
