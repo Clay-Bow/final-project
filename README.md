@@ -25,10 +25,10 @@ A web-based quiz game where users guess NBA players from the current roster of r
 
 ## Installation
 
-1. Clone the repository in your terminal:  
+1. Clone this repository:  
 - git clone https://github.com/yourusername/nba-roster-quiz.git
 2. Open index.html in a web browser.
-- No additional dependencies are required; the app runs purely in the browser.
+- No additional dependencies are required, the app runs purely in the browser.
 
 ---
 
