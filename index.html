@@ -206,27 +206,31 @@
     function endGame() {
       clearInterval(timerInterval);
       isPlaying = false;
-
+    
       document.getElementById("inputArea").style.display = "none";
       document.getElementById("resetBtn").style.display = "none";
       document.getElementById("playAgainBtn").style.display = "inline-block";
-
+    
       if (score > highScore) {
         highScore = score;
         localStorage.setItem("nbahighscore", highScore);
         document.getElementById("highScore").textContent = "High Score: " + highScore;
       }
-
+    
       const fullList = document.getElementById("fullRoster");
       fullList.innerHTML = "";
+    
       normalizedRoster.forEach(p => {
-        const li = document.createElement("li");
-        li.textContent = p.display;
-        fullList.appendChild(li);
+        if (!guessed.has(p.full)) {
+          const li = document.createElement("li");
+          li.textContent = p.display;
+          fullList.appendChild(li);
+        }
       });
-
+    
       document.getElementById("fullRosterList").style.display = "block";
     }
+
 
     function resetGame() {
       clearInterval(timerInterval);
