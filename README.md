@@ -1,28 +1,45 @@
-The NBA Roster Quiz is a browser-based game where users test their basketball knowledge by guessing players from a randomly selected NBA team.
-The goal is to correctly name as many players from the team’s current roster as possible before time runs out (timer feature still in progress).
+# NBA Roster Quiz
 
-This project uses HTML, CSS, and JavaScript with the balldontlie API to dynamically load NBA team and player data.
+A web-based quiz game where users guess NBA players from the current roster of randomly selected teams. Players have 60 seconds to guess as many names as possible. The game tracks scores and high scores across sessions.
 
+---
 
-How it works so far: 
+## Features
 
-When the user clicks “Start Game,” the app:
-- Fetches all NBA teams from the API
-- Chooses one team at random
-- Fetches that team’s current players
-- The chosen team’s name appears on the screen.
-- The player types names into the input box.
+- Randomly selects an NBA team for each game.  
+- Tracks guesses and prevents duplicate entries.  
+- Displays a live timer counting down from 60 seconds.  
+- Shows current score and all-time high score (stored in local storage).  
+- Reveals full team roster after the game ends.  
+- Allows players to reset game or play again.  
 
-When the player presses Enter:
-- If the name matches a player on the team’s roster, it’s added to the “guessed” list.
-- The score increases by 1 point.
-- The user continues guessing until they stop or the next features (timer/game over) are added.
+---
 
+## Technologies Used
 
-Features Still in Progress:
-- Timer countdown for each round
-- “Game Over” or “Round Complete” message
-- Handling API errors
-- Reset button for new rounds
-- Better visual feedback (color changes for correct/incorrect guesses)
-- Mobile-friendly layout
+- **HTML5** – semantic markup for structure.  
+- **CSS3** – modern styling, flexbox layout, responsive design.  
+- **JavaScript (ES6)** – DOM manipulation, event handling, JSON data fetching.  
+
+---
+
+## Installation
+
+1. Clone the repository in your terminal:  
+- git clone https://github.com/yourusername/nba-roster-quiz.git
+2. Open index.html in a web browser.
+- No additional dependencies are required; the app runs purely in the browser.
+
+---
+
+## Usage
+
+- Click Start Game to begin.
+- Type player names in the input box and press Enter or click Guess.
+-  The game tracks your score in real time.
+- When the timer reaches 0, the full roster of the selected team is displayed.
+- Click Play Again to start a new round or Reset Game to return to the main screen.
+
+Notes:
+- Player names are case-insensitive and can be guessed by first name, last name, or full name.
+- High scores persist across browser sessions using local storage.
