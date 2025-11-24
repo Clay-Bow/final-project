@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NBA Roster Quiz</title>
-  <style>
+
+  <style> 
+    /* PAGE LAYOUT AND GENERAL STYLES */
     body {
       margin: 0;
       background: #0b1120;
@@ -17,6 +19,7 @@
       padding: 20px;
     }
 
+    /* Main centered game container */
     .container {
       width: 100%;
       max-width: 700px;
@@ -32,6 +35,7 @@
       margin-bottom: 10px;
     }
 
+    /* Small cards for team name, timer, score, etc */
     .card {
       background: #1d2a38;
       padding: 10px;
@@ -41,6 +45,7 @@
       font-weight: bold;
     }
 
+    /* Button styles */
     button {
       background: #ffcc00;
       color: #111;
@@ -52,6 +57,7 @@
       margin: 8px;
     }
 
+    /* Transparent style used for the reset button */
     button.ghost {
       background: transparent;
       border: 2px solid #ffcc00;
@@ -68,6 +74,7 @@
       color: white;
     }
 
+    /* UL styling for guessed and missed players */
     ul {
       list-style: none;
       padding: 0;
@@ -83,36 +90,45 @@
       font-weight: 600;
     }
 
-    #fullRosterList ul{
+    /* Container for missed players list */
+    #fullRosterList ul {
+      display: none;
       max-height: 300px;
-      overflow-y: auto;  
+      overflow-y: auto;
       margin: 0;
       padding: 0;
     }
   </style>
 </head>
+
 <body>
   <div class="container">
 
+    <!-- App Title and instructions -->
     <h1>NBA Roster Quiz</h1>
     <p>Guess as many players from the random team as you can in 60 seconds.</p>
 
+    <!-- Dynamic game info cards -->
     <div id="teamName" class="card">Team: —</div>
     <div id="timer" class="card">Time: 60</div>
     <div id="highScore" class="card">High Score: 0</div>
 
+    <!-- Main game buttons -->
     <button id="startBtn">Start Game</button>
     <button id="resetBtn" class="ghost" style="display:none">Reset Game</button>
     <button id="playAgainBtn" style="display:none">Play Again</button>
 
+    <!-- Guess input area -->
     <div id="inputArea" style="display:none; margin-top: 15px;">
       <input type="text" id="guessInput" placeholder="Type player name..." autocomplete="off">
       <button id="guessBtn">Guess</button>
       <div id="score" class="card">Score: 0</div>
     </div>
 
+    <!-- List of successfully guessed players -->
     <ul id="guessedPlayers" style="display:none;"></ul>
 
+    <!-- List of unguessed players -->
     <div id="fullRosterList">
       <h3>Players You Missed</h3>
       <ul id="fullRoster"></ul>
@@ -121,60 +137,73 @@
   </div>
 
   <script>
+    // GAME CONSTANTS AND VARIABLES 
     const GAME_SECONDS = 60;
 
-    let rosters = {};
-    let normalizedRoster = [];
-    let guessed = new Set();
+    let rosters = {};                // Full JSON roster data
+    let normalizedRoster = [];       // Roster with lowercase/cleaned names
+    let guessed = new Set();         // Names correctly guessed this round
     let score = 0;
     let timeLeft = GAME_SECONDS;
     let timerInterval = null;
     let isPlaying = false;
-
     let currentTeamId = null;
 
+    // Team ID to Team Name lookup table 
     const TEAM_NAMES = {
       "1":"Golden State Warriors","2":"Los Angeles Lakers","3":"Milwaukee Bucks",
       "4":"Dallas Mavericks","5":"Denver Nuggets","6":"Philadelphia 76ers",
       "7":"Atlanta Hawks","8":"Memphis Grizzlies","9":"Cleveland Cavaliers",
       "10":"Oklahoma City Thunder","11":"Phoenix Suns","12":"New Orleans Pelicans",
       "13":"Boston Celtics","14":"Minnesota Timberwolves","15":"Charlotte Hornets",
-      "16":"Miami Heat","17":"Brooklyn Nets","18":"New York Knicks","19": "Toronto Raptors",
+      "16":"Miami Heat","17":"Brooklyn Nets","18":"New York Knicks","19":"Toronto Raptors",
       "20":"LA Clippers","21":"Sacramento Kings","22":"Detroit Pistons",
       "23":"Chicago Bulls","24":"Indiana Pacers","25":"Houston Rockets",
-      "26":"San Antonio Spurs","27":"Orlando Magic","28":"Washington Wizards","29":"Portland Trail Blazers","30":"Utah Jazz"
+      "26":"San Antonio Spurs","27":"Orlando Magic","28":"Washington Wizards",
+      "29":"Portland Trail Blazers","30":"Utah Jazz"
     };
 
+    // Load high score from browser storage 
     let highScore = parseInt(localStorage.getItem("nbahighscore") || "0");
     document.getElementById("highScore").textContent = "High Score: " + highScore;
 
+    // Normalizes input: removes accents, trims spaces, and converts to lowercase 
     const normalize = str =>
       str.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().trim();
 
+
+    // LOAD PLAYER DATA FROM JSON 
     async function loadPlayers() {
       const res = await fetch("rosters.json");
       rosters = await res.json();
     }
 
+
+    // Pick a random team ID each game 
     function pickRandomTeamId() {
       const keys = Object.keys(rosters);
       return keys[Math.floor(Math.random() * keys.length)];
     }
 
+
+    // Prepare roster for name matching (full, first, last) 
     function prepareRoster(teamArr) {
       normalizedRoster = teamArr.map(name => {
         const full = normalize(name);
         const parts = full.split(" ");
         return {
-          display: name,
-          full,
-          first: parts[0],
-          last: parts[parts.length - 1]
+          display: name,              // original name
+          full,                       // fully normalized name
+          first: parts[0],            // first name only
+          last: parts[parts.length - 1]  // last name only
         };
       });
     }
 
+
+    // START GAME LOGIC 
     function startGame() {
+      // Hide missed players list when game begins
       document.getElementById("fullRosterList").style.display = "none";
       document.getElementById("fullRoster").innerHTML = "";
 
@@ -187,16 +216,19 @@
       timeLeft = GAME_SECONDS;
       isPlaying = true;
 
+      // Update UI
       document.getElementById("teamName").textContent = TEAM_NAMES[currentTeamId];
       document.getElementById("score").textContent = "Score: 0";
       document.getElementById("timer").textContent = "Time: " + GAME_SECONDS;
 
+      // Button visibility
       document.getElementById("startBtn").style.display = "none";
       document.getElementById("resetBtn").style.display = "inline-block";
       document.getElementById("inputArea").style.display = "block";
       document.getElementById("guessedPlayers").innerHTML = "";
       document.getElementById("guessedPlayers").style.display = "block";
 
+      // Countdown timer
       timerInterval = setInterval(() => {
         timeLeft--;
         document.getElementById("timer").textContent = "Time: " + timeLeft;
@@ -205,23 +237,28 @@
       }, 1000);
     }
 
+
+    // END GAME AND SHOW RESULTS 
     function endGame() {
       clearInterval(timerInterval);
       isPlaying = false;
-    
+
+      // Hide input & reset button
       document.getElementById("inputArea").style.display = "none";
       document.getElementById("resetBtn").style.display = "none";
       document.getElementById("playAgainBtn").style.display = "inline-block";
-    
+
+      // Update high score
       if (score > highScore) {
         highScore = score;
         localStorage.setItem("nbahighscore", highScore);
         document.getElementById("highScore").textContent = "High Score: " + highScore;
       }
-    
+
+      // Populate missed players list
       const fullList = document.getElementById("fullRoster");
       fullList.innerHTML = "";
-    
+
       normalizedRoster.forEach(p => {
         if (!guessed.has(p.full)) {
           const li = document.createElement("li");
@@ -229,11 +266,14 @@
           fullList.appendChild(li);
         }
       });
-    
+
+      // Display the list
       document.getElementById("fullRosterList").style.display = "block";
+      document.querySelector("#fullRosterList ul").style.display = "block";
     }
 
 
+    // RESET GAME — RETURNS TO START 
     function resetGame() {
       clearInterval(timerInterval);
       isPlaying = false;
@@ -247,11 +287,13 @@
 
       document.getElementById("resetBtn").style.display = "none";
       document.getElementById("playAgainBtn").style.display = "none";
-
       document.getElementById("startBtn").style.display = "inline-block";
+
       document.getElementById("fullRosterList").style.display = "none";
     }
 
+
+    // PROCESS PLAYER GUESSES 
     function acceptGuess() {
       if (!isPlaying) return;
 
@@ -261,6 +303,7 @@
       const g = normalize(raw);
       if (!g) return;
 
+      // Check full, first, or last name match
       for (const p of normalizedRoster) {
         if (guessed.has(p.full)) continue;
 
@@ -269,6 +312,7 @@
           score++;
           document.getElementById("score").textContent = "Score: " + score;
 
+          // Add guessed player to UI list
           const li = document.createElement("li");
           li.textContent = p.display;
           document.getElementById("guessedPlayers").appendChild(li);
@@ -277,15 +321,18 @@
       }
     }
 
+    // EVENT LISTENERS
     document.getElementById("startBtn").onclick = startGame;
     document.getElementById("playAgainBtn").onclick = startGame;
     document.getElementById("resetBtn").onclick = resetGame;
     document.getElementById("guessBtn").onclick = acceptGuess;
 
+    // Allow pressing Enter to submit guesses
     document.getElementById("guessInput").addEventListener("keypress", e => {
       if (e.key === "Enter") acceptGuess();
     });
 
+    // Load rosters.json when page loads
     loadPlayers();
   </script>
 </body>
