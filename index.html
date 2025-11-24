@@ -16,11 +16,11 @@
       display: flex;
       justify-content: center;
       align-items: center;   
-      height: 100vh;         
+      min-height: 100vh;    
       padding: 20px;
     }
   
-    /* Main  game container */
+    /* Main game container */
     .container {
       width: 100%;
       max-width: 700px;
@@ -29,14 +29,8 @@
       border-radius: 12px;
       text-align: center;
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
-  
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-  
-      /* Set fixed max height to prevent stretching */
       max-height: 90vh;
-      overflow: hidden;
+      overflow: auto;
     }
   
     h1 {
@@ -54,7 +48,7 @@
       font-weight: bold;
     }
   
-    /* Button styles */
+    /* Buttons */
     button {
       background: #ffcc00;
       color: #111;
@@ -73,10 +67,18 @@
       color: #ffcc00;
     }
   
-    input {
-      padding: 10px;
-      width: 70%;
+    /* Input + guess button layout */
+    #inputArea {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+    }
+  
+    #inputArea input {
+      flex: 1;
       max-width: 300px;
+      padding: 10px;
       border-radius: 8px;
       border: none;
       background: rgba(255, 255, 255, 0.07);
@@ -88,6 +90,7 @@
       list-style: none;
       padding: 0;
       margin-top: 12px;
+      word-break: normal;
     }
   
     li {
@@ -97,6 +100,9 @@
       width: 80%;
       border-radius: 8px;
       font-weight: 600;
+      white-space: nowrap; 
+      overflow: hidden;
+      text-overflow: ellipsis; 
     }
   
     /* Container for missed players list */
@@ -107,8 +113,8 @@
     }
   
     #fullRosterList ul {
-      max-height: 200px;
-      overflow-y: auto; 
+      max-height: 250px; 
+      overflow-y: auto;
       margin: 0 auto;
       padding: 0;
       width: 80%;
