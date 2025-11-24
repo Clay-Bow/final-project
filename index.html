@@ -5,22 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NBA Roster Quiz</title>
 
-  <style> 
-    /* PAGE LAYOUT AND GENERAL STYLES */
+  <style>
+    /* PAGE LAYOUT & GENERAL STYLES */
     body {
       margin: 0;
       background: #0b1120;
       color: #f0f4f8;
       font-family: system-ui, sans-serif;
-    
+  
       display: flex;
-      justify-content: center;   
-      
+      justify-content: center;
+      align-items: center;   
+      height: 100vh;         
       padding: 20px;
-      min-height: 100vh;       
     }
-
-    /* Main centered game container */
+  
+    /* Main  game container */
     .container {
       width: 100%;
       max-width: 700px;
@@ -29,13 +29,21 @@
       border-radius: 12px;
       text-align: center;
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+  
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+  
+      /* Set fixed max height to prevent stretching */
+      max-height: 90vh;
+      overflow: hidden;
     }
-
+  
     h1 {
       color: #ffcc00;
       margin-bottom: 10px;
     }
-
+  
     /* Small cards for team name, timer, score, etc */
     .card {
       background: #1d2a38;
@@ -45,7 +53,7 @@
       width: 60%;
       font-weight: bold;
     }
-
+  
     /* Button styles */
     button {
       background: #ffcc00;
@@ -57,14 +65,14 @@
       cursor: pointer;
       margin: 8px;
     }
-
+  
     /* Transparent style used for the reset button */
     button.ghost {
       background: transparent;
       border: 2px solid #ffcc00;
       color: #ffcc00;
     }
-
+  
     input {
       padding: 10px;
       width: 70%;
@@ -74,14 +82,14 @@
       background: rgba(255, 255, 255, 0.07);
       color: white;
     }
-
+  
     /* UL styling for guessed and missed players */
     ul {
       list-style: none;
       padding: 0;
       margin-top: 12px;
     }
-
+  
     li {
       background: rgba(255, 255, 255, 0.06);
       padding: 8px;
@@ -90,14 +98,20 @@
       border-radius: 8px;
       font-weight: 600;
     }
-
+  
     /* Container for missed players list */
+    #fullRosterList {
+      width: 100%;
+      margin-top: 15px;
+      display: none; 
+    }
+  
     #fullRosterList ul {
-      display: none;
-      max-height: 300px;
-      overflow-y: auto;
-      margin: 0;
+      max-height: 200px;
+      overflow-y: auto; 
+      margin: 0 auto;
       padding: 0;
+      width: 80%;
     }
   </style>
 </head>
