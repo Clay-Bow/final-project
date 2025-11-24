@@ -129,7 +129,7 @@
     <ul id="guessedPlayers" style="display:none;"></ul>
 
     <!-- List of unguessed players -->
-    <div id="fullRosterList">
+    <div id="fullRosterList" style="display:none;">
       <h3>Players You Missed</h3>
       <ul id="fullRoster"></ul>
     </div>
@@ -225,6 +225,7 @@
       document.getElementById("startBtn").style.display = "none";
       document.getElementById("resetBtn").style.display = "inline-block";
       document.getElementById("inputArea").style.display = "block";
+      document.getElementById("playAgainBtn").style.display = "none";
       document.getElementById("guessedPlayers").innerHTML = "";
       document.getElementById("guessedPlayers").style.display = "block";
 
